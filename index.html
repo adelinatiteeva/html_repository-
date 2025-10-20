@@ -3,42 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>LexiDash Monster</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <h1>My CV</h1>
-    <h2>I am learning web-design</h2>
-    <br>
-    <a href="/assets/images/movie-ranking.png">Movie Ranking Project</a>
-    <h3>The best movies accordin to me:</h3>
-    
-        <ul>
-            <li>se;fkf</li>
-                <li>sdf;mdsf</li>
-                    <li>seglkndf</li>
-        </ul> 
-        <a href="/assets/images/birthday-invite.png">Birthday invite project</a>
-        <h2>It's my birthday!</h2>
-        <img src="./assets/images/birthday-invite.png" width="300" >
-<a href="./public/about.html">About me</a>
-<a href="./public/contact.html">Contact me</a>
+    <header class="app-header">
+        <h1>LexiDash Monster</h1>
+        <p class="tagline">Create vocabulary boards, challenge the monster, and track your progress.</p>
+    </header>
 
+    <main>
+        <section id="auth-section" class="card">
+            <h2>Welcome</h2>
+            <p class="section-intro">Create an account or sign in to build vocabulary boards and play timed translation rounds.</p>
 
-    </body>
+            <div class="auth-toggle" role="tablist">
+                <button id="show-login" class="auth-tab active" type="button" aria-selected="true" aria-controls="login-form">Sign in</button>
+                <button id="show-register" class="auth-tab" type="button" aria-selected="false" aria-controls="register-form">Create account</button>
+            </div>
+
+            <form id="login-form" class="auth-form" autocomplete="off">
+                <label>
+                    Email
+                    <input type="email" id="login-email" required>
+                </label>
+                <label>
+                    Password
+                    <input type="password" id="login-password" minlength="4" required>
+                </label>
+                <button type="submit" class="primary">Sign in</button>
+                <p class="helper-text">Accounts are stored locally for demo purposes.</p>
+            </form>
+
+            <form id="register-form" class="auth-form hidden" autocomplete="off">
+                <label>
+                    Display name
+                    <input type="text" id="register-name" required>
+                </label>
+                <label>
+                    Email
+                    <input type="email" id="register-email" required>
+                </label>
+                <label>
+                    Password
+                    <input type="password" id="register-password" minlength="4" required>
+                </label>
+                <button type="submit" class="primary">Create account</button>
+                <p class="helper-text">All data lives in your browser so you can explore safely.</p>
+            </form>
+        </section>
+
+        <section id="app-section" class="hidden">
+            <div class="card user-bar">
+                <div>
+                    <h2 id="welcome-message">Hello!</h2>
+                    <p id="board-count">0 boards created</p>
+                </div>
+                <div class="user-actions">
+                    <button id="logout-btn" type="button" class="ghost">Log out</button>
+                </div>
+            </div>
+
+            <div class="grid">
+                <section class="card" aria-labelledby="board-management-title">
+                    <div class="card-header">
+                        <h3 id="board-management-title">Vocabulary boards</h3>
+                        <button id="new-board-btn" type="button" class="ghost small">New board</button>
+                    </div>
+                    <p class="section-intro">Select a board to add cards and start a round.</p>
+                    <ul id="board-list" class="list"></ul>
+                </section>
+
+                <section class="card" aria-labelledby="board-editor-title">
+                    <div class="card-header">
+                        <h3 id="board-editor-title">Board details</h3>
+                        <span id="active-board-name" class="badge">No board selected</span>
+                    </div>
+                    <form id="card-form" class="inline-form" autocomplete="off">
+                        <input type="text" id="term-input" placeholder="Word or phrase" required>
+                        <input type="text" id="translation-input" placeholder="Translation" required>
+                        <button type="submit" class="primary small">Add card</button>
+                    </form>
+                    <ul id="card-list" class="list compact"></ul>
+                </section>
+            </div>
+
+            <section class="card" aria-labelledby="game-title">
+                <div class="card-header">
+                    <h3 id="game-title">Timed translation round</h3>
+                    <button id="start-round-btn" type="button" class="primary small">Start round</button>
+                </div>
+                <p class="section-intro">When the monster reaches the end of the track (30 seconds), the round ends. Translate the prompt before time runs out!</p>
+
+                <div id="track" aria-live="polite">
+                    <div id="monster" class="monster">👾</div>
+                    <div id="explosion" class="explosion hidden">💥</div>
+                </div>
+
+                <div id="prompt-area">
+                    <p id="current-term" class="prompt">Select a board and start a round.</p>
+                    <form id="answer-form" class="inline-form" autocomplete="off">
+                        <input type="text" id="answer-input" placeholder="Type translation" required disabled>
+                        <button type="submit" class="primary small" disabled>Submit</button>
+                    </form>
+                    <p id="round-feedback" class="feedback" role="alert"></p>
+                </div>
+            </section>
+
+            <section class="card" aria-labelledby="analytics-title">
+                <div class="card-header">
+                    <h3 id="analytics-title">Round analytics</h3>
+                </div>
+                <div id="analytics" class="analytics">
+                    <div class="metric">
+                        <span class="metric-label">Total rounds</span>
+                        <span id="metric-rounds" class="metric-value">0</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Success rate</span>
+                        <span id="metric-success" class="metric-value">0%</span>
+                    </div>
+                    <div class="metric">
+                        <span class="metric-label">Fastest victory</span>
+                        <span id="metric-fastest" class="metric-value">–</span>
+                    </div>
+                </div>
+                <table id="history-table">
+                    <caption>Recent rounds</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Board</th>
+                            <th scope="col">Prompt</th>
+                            <th scope="col">Result</th>
+                            <th scope="col">Time left</th>
+                            <th scope="col">Played at</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </section>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; <span id="current-year"></span> LexiDash Monster. Built for rapid vocabulary drills.</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
 </html>
-
-<!-- TODO 1: Create the HTML Boilerplate -->
-
-<!-- TODO 2: Add Your previous projects' HTML into the public folder -->
-
-<!-- TODO 3: Take screenshots of your project previews and add the images to the images folder -->
-
-<!-- TODO 4: Add titles/subtitles etc. -->
-
-<!-- TODO 5: Add a link to the project pages -->
-
-<!-- TODO 6: Add images to show the project previews
-HINT for TODO 6: You can use the height attribute set to 200 to make the image smaller:
-https://developer.mozilla.org/en-US/docs/Web/HTML/Element/img#attr-height -->
-
-<!-- TODO 7: Add the Contact Me and About Me page links -->
