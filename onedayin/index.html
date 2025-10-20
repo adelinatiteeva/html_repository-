@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneDayIn Catalog — 20 Best Places • One City</title>
+  <meta name="description" content="Unlock curated local offers in Tel-Aviv, Barcelona, and Lisbon by completing a mindful activity with OneDayIn's 20-place city catalog.">
+  <meta property="og:title" content="OneDayIn — 20 Best Places • One City">
+  <meta property="og:description" content="Complete 10,000 steps, plogging, or volunteering to unlock exclusive perks from 20 partner places.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://onedayin.example">
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#hero" aria-label="OneDayIn home">OneDayIn</a>
+      <nav aria-label="Primary">
+        <ul class="nav-list">
+          <li><a href="#how-it-works">How it works</a></li>
+          <li><a href="#cities">Cities</a></li>
+          <li><a href="#offers">Offers</a></li>
+          <li><a href="#pricing">Pricing</a></li>
+          <li><a href="#partners">Partners</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </nav>
+      <button type="button" id="themeToggle" class="theme-toggle" aria-pressed="false">Toggle theme</button>
+    </div>
+  </header>
+
+  <main id="hero">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="container hero-content">
+        <div>
+          <p class="eyebrow">City discovery with purpose</p>
+          <h1 id="hero-title">20 Best Places • One City</h1>
+          <p class="subtitle">A curated catalog of offers (discounts, free welcome drink, or free entry) from 20 partners. Unlock perks by completing one of the activities: 10,000 steps, plogging, or volunteering with the local municipality.</p>
+          <div class="hero-actions">
+            <a class="btn primary" href="#pricing">Get the Catalog</a>
+            <button type="button" class="btn secondary" id="leadTrigger">Leave your email</button>
+          </div>
+        </div>
+        <aside class="activities" aria-label="Qualifying activities">
+          <h2>Qualifying activities</h2>
+          <ul id="activityList" class="activity-list"></ul>
+        </aside>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="section" aria-labelledby="how-title">
+      <div class="container">
+        <h2 id="how-title">How it works</h2>
+        <ol class="steps">
+          <li>Choose a city</li>
+          <li>Buy the catalog</li>
+          <li>Do one activity</li>
+          <li>Claim your perk</li>
+        </ol>
+      </div>
+    </section>
+
+    <section id="cities" class="section" aria-labelledby="cities-title">
+      <div class="container">
+        <h2 id="cities-title">Cities</h2>
+        <p>Select a city to explore partner perks.</p>
+        <div id="citiesGrid" class="card-grid" role="list"></div>
+      </div>
+    </section>
+
+    <section id="offers" class="section" aria-labelledby="offers-title">
+      <div class="container">
+        <div class="section-heading">
+          <h2 id="offers-title">Offers</h2>
+          <label for="offerFilter" class="filter-label">Filter
+            <select id="offerFilter" aria-label="Filter partner offers">
+              <option value="all">All offers</option>
+              <option value="discount">Discount</option>
+              <option value="drink">Welcome drink</option>
+              <option value="entry">Free entry</option>
+            </select>
+          </label>
+        </div>
+        <div id="offersList" class="card-grid" role="list"></div>
+      </div>
+    </section>
+
+    <section id="pricing" class="section" aria-labelledby="pricing-title">
+      <div class="container">
+        <h2 id="pricing-title">Pricing</h2>
+        <div class="card-grid pricing-grid">
+          <article class="card" role="listitem">
+            <h3>Basic</h3>
+            <p class="price">€9</p>
+            <p>Access to one city catalog.</p>
+            <button type="button" class="btn primary pricing-btn" data-plan="Basic">Choose Basic</button>
+          </article>
+          <article class="card" role="listitem">
+            <h3>Pro</h3>
+            <p class="price">€15</p>
+            <p>Unlock any two city catalogs.</p>
+            <button type="button" class="btn primary pricing-btn" data-plan="Pro">Choose Pro</button>
+          </article>
+          <article class="card" role="listitem">
+            <h3>VIP</h3>
+            <p class="price">€29</p>
+            <p>All current and future cities.</p>
+            <button type="button" class="btn primary pricing-btn" data-plan="VIP">Choose VIP</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="partners" class="section" aria-labelledby="partners-title">
+      <div class="container">
+        <h2 id="partners-title">Become a partner</h2>
+        <p>Have a venue that fits our mission? Tell us about your offer.</p>
+        <form id="partnerForm" novalidate class="form-grid">
+          <label for="partnerName">Place name
+            <input id="partnerName" name="partnerName" type="text" required placeholder="Your place name">
+          </label>
+          <label for="partnerType">Offer type
+            <select id="partnerType" name="partnerType" required>
+              <option value="">Select type</option>
+              <option value="discount">Discount</option>
+              <option value="drink">Welcome drink</option>
+              <option value="entry">Free entry</option>
+            </select>
+          </label>
+          <label for="partnerContact">Contact email
+            <input id="partnerContact" name="partnerContact" type="email" required placeholder="name@example.com">
+          </label>
+          <button type="submit" class="btn primary form-submit">Submit</button>
+          <p id="partnerFeedback" class="form-feedback" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <section id="faq" class="section" aria-labelledby="faq-title">
+      <div class="container">
+        <h2 id="faq-title">FAQ</h2>
+        <div class="faq-list">
+          <article class="faq-item">
+            <h3>How do I prove 10,000 steps?</h3>
+            <p>A screenshot from your phone’s step counter for the current day.</p>
+          </article>
+          <article class="faq-item">
+            <h3>What is plogging?</h3>
+            <p>Running or walking while collecting litter; bring a simple before/after photo.</p>
+          </article>
+          <article class="faq-item">
+            <h3>What counts as volunteering?</h3>
+            <p>Any activity coordinated with the municipality or a local NGO; short organizer confirmation.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> OneDayIn. Purposeful city perks.</p>
+    </div>
+  </footer>
+
+  <dialog id="leadModal" aria-labelledby="lead-modal-title" aria-modal="true">
+    <form id="leadForm" method="dialog">
+      <h2 id="lead-modal-title">Get launch updates</h2>
+      <p>Leave your email and we will let you know when new cities arrive.</p>
+      <label for="leadEmail">Email
+        <input id="leadEmail" name="leadEmail" type="email" required placeholder="you@example.com">
+      </label>
+      <div class="modal-actions">
+        <button type="submit" class="btn primary">Notify me</button>
+        <button type="button" id="leadClose" class="btn secondary">Close</button>
+      </div>
+      <p id="leadFeedback" class="form-feedback" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
+
+  <script type="application/json" id="seed-data">
+  {
+    "cities": [
+      {
+        "id": "tel-aviv",
+        "name": "Tel-Aviv",
+        "description": "20 best bars, coffee shops, and culture spots in Tel-Aviv with special offers.",
+        "partners": [
+          {"name":"Cafe Levant","offer":"Free welcome drink","type":"drink","address":"Dizengoff 123"},
+          {"name":"Gallery 19","offer":"Free entry on Thu","type":"entry","address":"Florentin 19"},
+          {"name":"Port Bar","offer":"−15% on cocktails","type":"discount","address":"Namal 5"},
+          {"name":"Spice Souk Kitchen","offer":"−12% on tasting menu","type":"discount","address":"Levinsky Market"},
+          {"name":"Sunrise Yoga Loft","offer":"Free entry to morning session","type":"entry","address":"Rothschild 72"}
+        ]
+      },
+      {
+        "id": "barcelona",
+        "name": "Barcelona",
+        "description": "20-place catalog: tapas, wine, and art spaces.",
+        "partners": [
+          {"name":"Bodega Sol","offer":"−10% on wines","type":"discount","address":"El Born"},
+          {"name":"Tapas Rio","offer":"Free vermut","type":"drink","address":"Barceloneta"},
+          {"name":"Atelier Gracia","offer":"Free entry to night exhibition","type":"entry","address":"Gràcia"},
+          {"name":"Cafe Rambla","offer":"−15% breakfast combo","type":"discount","address":"La Rambla"}
+        ]
+      },
+      {
+        "id": "lisbon",
+        "name": "Lisbon",
+        "description": "Top places in Alfama and Bairro Alto with perks for catalog holders.",
+        "partners": [
+          {"name":"Miradouro Bar","offer":"−20% at sunset","type":"discount","address":"Graça"},
+          {"name":"Fado Noite","offer":"Free entry before 8pm","type":"entry","address":"Alfama"},
+          {"name":"Pastel Ponto","offer":"Free welcome espresso","type":"drink","address":"Bairro Alto"}
+        ]
+      }
+    ],
+    "activityRules": [
+      {"id":"steps","title":"10,000 steps/day","proof":"screenshot from step counter"},
+      {"id":"plogging","title":"Plogging (clean-up run/walk)","proof":"before/after photo"},
+      {"id":"volunteer","title":"Volunteering with municipality","proof":"short organizer confirmation"}
+    ]
+  }
+  </script>
+  <script src="js/app.js" defer></script>
+</body>
+</html>

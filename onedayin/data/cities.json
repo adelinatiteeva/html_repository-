@@ -1,0 +1,42 @@
+{
+  "cities": [
+    {
+      "id": "tel-aviv",
+      "name": "Tel-Aviv",
+      "description": "20 best bars, coffee shops, and culture spots in Tel-Aviv with special offers.",
+      "partners": [
+        {"name": "Cafe Levant", "offer": "Free welcome drink", "type": "drink", "address": "Dizengoff 123"},
+        {"name": "Gallery 19", "offer": "Free entry on Thu", "type": "entry", "address": "Florentin 19"},
+        {"name": "Port Bar", "offer": "−15% on cocktails", "type": "discount", "address": "Namal 5"},
+        {"name": "Spice Souk Kitchen", "offer": "−12% on tasting menu", "type": "discount", "address": "Levinsky Market"},
+        {"name": "Sunrise Yoga Loft", "offer": "Free entry to morning session", "type": "entry", "address": "Rothschild 72"}
+      ]
+    },
+    {
+      "id": "barcelona",
+      "name": "Barcelona",
+      "description": "20-place catalog: tapas, wine, and art spaces.",
+      "partners": [
+        {"name": "Bodega Sol", "offer": "−10% on wines", "type": "discount", "address": "El Born"},
+        {"name": "Tapas Rio", "offer": "Free vermut", "type": "drink", "address": "Barceloneta"},
+        {"name": "Atelier Gracia", "offer": "Free entry to night exhibition", "type": "entry", "address": "Gràcia"},
+        {"name": "Cafe Rambla", "offer": "−15% breakfast combo", "type": "discount", "address": "La Rambla"}
+      ]
+    },
+    {
+      "id": "lisbon",
+      "name": "Lisbon",
+      "description": "Top places in Alfama and Bairro Alto with perks for catalog holders.",
+      "partners": [
+        {"name": "Miradouro Bar", "offer": "−20% at sunset", "type": "discount", "address": "Graça"},
+        {"name": "Fado Noite", "offer": "Free entry before 8pm", "type": "entry", "address": "Alfama"},
+        {"name": "Pastel Ponto", "offer": "Free welcome espresso", "type": "drink", "address": "Bairro Alto"}
+      ]
+    }
+  ],
+  "activityRules": [
+    {"id": "steps", "title": "10,000 steps/day", "proof": "screenshot from step counter"},
+    {"id": "plogging", "title": "Plogging (clean-up run/walk)", "proof": "before/after photo"},
+    {"id": "volunteer", "title": "Volunteering with municipality", "proof": "short organizer confirmation"}
+  ]
+}
