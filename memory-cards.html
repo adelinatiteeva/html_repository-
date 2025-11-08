@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Memory Cards Monsters</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      --accent: #6c5ce7;
+      --accent-dark: #4b3ac7;
+      --danger: #ff7675;
+      --success: #00b894;
+      --bg: #f8f9ff;
+      --card: #ffffffdd;
+      --text-dark: #2d3436;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, var(--bg), #dfe6e9);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 1.5rem;
+      background: linear-gradient(120deg, var(--accent), #00cec9);
+      color: white;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    header h1 {
+      margin: 0.3rem 0 0.6rem;
+      font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+      letter-spacing: 0.03em;
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      padding: clamp(1rem, 2vw, 2rem);
+    }
+
+    section {
+      background: var(--card);
+      padding: clamp(1rem, 1.5vw, 1.5rem);
+      border-radius: 20px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.1);
+      backdrop-filter: blur(8px);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    form, .board-controls {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    label {
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    input, select, button, textarea {
+      font: inherit;
+      padding: 0.65rem 0.75rem;
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      background: rgba(255, 255, 255, 0.8);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid var(--accent);
+      outline-offset: 1px;
+      transform: translateY(-2px);
+      box-shadow: 0 12px 20px rgba(108, 92, 231, 0.25);
+    }
+
+    button {
+      cursor: pointer;
+      background: var(--accent);
+      color: white;
+      border: none;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    button.secondary {
+      background: rgba(108, 92, 231, 0.15);
+      color: var(--accent-dark);
+      border: 1px dashed var(--accent-dark);
+    }
+
+    button:active {
+      transform: scale(0.99);
+    }
+
+    .boards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      max-height: 200px;
+      overflow: auto;
+      padding-right: 0.3rem;
+    }
+
+    .board-item {
+      padding: 0.6rem 0.75rem;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid rgba(0, 0, 0, 0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .board-item strong {
+      display: block;
+    }
+
+    .training-area {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .card-display {
+      position: relative;
+      background: linear-gradient(160deg, #ffeaa7, #fab1a0);
+      padding: 1.5rem;
+      border-radius: 18px;
+      min-height: 140px;
+      display: grid;
+      gap: 0.5rem;
+      font-size: 1.1rem;
+      box-shadow: inset 0 0 0 2px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-display h3 {
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .monster-track {
+      position: relative;
+      background: rgba(0, 0, 0, 0.08);
+      border-radius: 999px;
+      height: 20px;
+      overflow: hidden;
+    }
+
+    .monster {
+      position: absolute;
+      top: -18px;
+      left: 0;
+      font-size: 2rem;
+      transition: transform 0.2s ease;
+    }
+
+    .monster-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      background: linear-gradient(120deg, #fdcb6e, #d63031);
+      border-radius: inherit;
+      transform-origin: left;
+      transition: transform 0.1s linear;
+    }
+
+    .status {
+      font-weight: 600;
+      min-height: 24px;
+    }
+
+    .status.success {
+      color: var(--success);
+    }
+
+    .status.fail {
+      color: var(--danger);
+    }
+
+    .stats-list {
+      display: grid;
+      gap: 0.4rem;
+      font-size: 0.95rem;
+    }
+
+    .stats-list div {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.55rem 0.75rem;
+      background: rgba(255, 255, 255, 0.8);
+      border-radius: 12px;
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .queue-counter {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 1rem;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <p>🚀 Flashcards + монстры = запоминай быстрее!</p>
+    <h1>Memory Cards Monsters</h1>
+    <p>Создавай собственные доски, тренируй перевод и взрывай монстров до того, как они доберутся до финиша.</p>
+  </header>
+  <main>
+    <section>
+      <h2>📚 Управление досками</h2>
+      <form id="board-form">
+        <label>
+          Название доски
+          <input type="text" id="board-name" placeholder="Например, Английский: путешествия" required />
+        </label>
+        <label>
+          Слово (оригинал)
+          <input type="text" id="word-front" placeholder="airport" required />
+        </label>
+        <label>
+          Перевод / ответ
+          <input type="text" id="word-back" placeholder="аэропорт" required />
+        </label>
+        <button type="submit">➕ Добавить карточку</button>
+      </form>
+      <div class="board-controls">
+        <label>
+          Выбери доску для просмотра
+          <select id="board-select"></select>
+        </label>
+        <div class="boards-list" id="board-preview"></div>
+        <button type="button" id="shuffle-board" class="secondary">🔀 Перетасовать слова</button>
+        <button type="button" id="clear-board" class="secondary">🗑️ Удалить доску</button>
+        <button type="button" id="export-unlearned" class="secondary">📦 Собрать все невыученные в доску</button>
+      </div>
+    </section>
+
+    <section>
+      <h2>🎮 Тренировка</h2>
+      <div class="training-area">
+        <label>
+          Выбери доску для тренировки
+          <select id="training-board"></select>
+        </label>
+        <label>
+          Таймер на слово
+          <select id="time-limit">
+            <option value="30">30 секунд</option>
+            <option value="15">15 секунд</option>
+          </select>
+        </label>
+        <button type="button" id="start-training">🚦 Старт</button>
+        <div class="card-display" id="card-display">
+          <h3>СЛОВО</h3>
+          <div id="card-word">Создайте доску и нажмите «Старт».</div>
+          <div class="queue-counter" id="queue-counter"></div>
+        </div>
+        <label>
+          Введите перевод
+          <input type="text" id="answer-input" placeholder="Введите ответ" autocomplete="off" disabled />
+        </label>
+        <button type="button" id="submit-answer" disabled>💥 Взорвать монстра</button>
+        <div class="monster-track">
+          <div class="monster-progress" id="monster-progress" style="transform: scaleX(0);"></div>
+          <div class="monster" id="monster">👾</div>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>📊 Статистика</h2>
+      <div class="stats-list" id="stats"></div>
+      <p class="queue-counter">⚡ Невыученные слова автоматически попадают в доску «Повторение».</p>
+      <button type="button" id="train-unlearned">🧠 Тренировать «Повторение»</button>
+    </section>
+  </main>
+  <script>
+    const STORAGE_KEY = 'monster-memory-cards';
+    const UNLEARNED_KEY = 'Повторение';
+    const MONSTERS = ['👾', '👹', '🧟', '🐉', '🕷️', '💀'];
+
+    const elements = {
+      boardForm: document.getElementById('board-form'),
+      boardName: document.getElementById('board-name'),
+      wordFront: document.getElementById('word-front'),
+      wordBack: document.getElementById('word-back'),
+      boardSelect: document.getElementById('board-select'),
+      boardPreview: document.getElementById('board-preview'),
+      shuffleBoard: document.getElementById('shuffle-board'),
+      clearBoard: document.getElementById('clear-board'),
+      exportUnlearned: document.getElementById('export-unlearned'),
+      trainingBoard: document.getElementById('training-board'),
+      timeLimit: document.getElementById('time-limit'),
+      startTraining: document.getElementById('start-training'),
+      cardWord: document.getElementById('card-word'),
+      queueCounter: document.getElementById('queue-counter'),
+      answerInput: document.getElementById('answer-input'),
+      submitAnswer: document.getElementById('submit-answer'),
+      cardDisplay: document.getElementById('card-display'),
+      monster: document.getElementById('monster'),
+      monsterProgress: document.getElementById('monster-progress'),
+      status: document.getElementById('status'),
+      stats: document.getElementById('stats'),
+      trainUnlearned: document.getElementById('train-unlearned')
+    };
+
+    let data = loadData();
+    ensureUnlearnedBoard();
+    refreshBoardLists();
+    refreshPreview();
+    refreshStats();
+
+    const trainingState = {
+      queue: [],
+      wrong: [],
+      current: null,
+      timerId: null,
+      timeRemaining: 0,
+      duration: 30,
+      activeBoard: null,
+      monsterIndex: 0
+    };
+
+    function loadData() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { boards: {} };
+        return JSON.parse(raw);
+      } catch (error) {
+        console.error('Не удалось загрузить данные', error);
+        return { boards: {} };
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function ensureUnlearnedBoard() {
+      if (!data.boards[UNLEARNED_KEY]) {
+        data.boards[UNLEARNED_KEY] = { cards: [], stats: { trained: 0, correct: 0, wrong: 0 } };
+        saveData();
+      }
+    }
+
+    function addCard(boardName, front, back) {
+      if (!data.boards[boardName]) {
+        data.boards[boardName] = { cards: [], stats: { trained: 0, correct: 0, wrong: 0 } };
+      }
+      data.boards[boardName].cards.push({ front, back });
+      saveData();
+      refreshBoardLists();
+      elements.boardSelect.value = boardName;
+      elements.trainingBoard.value = boardName;
+      refreshPreview(boardName);
+      refreshStats();
+    }
+
+    function refreshBoardLists() {
+      const names = Object.keys(data.boards);
+      if (!names.includes(UNLEARNED_KEY)) {
+        ensureUnlearnedBoard();
+        names.push(UNLEARNED_KEY);
+      }
+      const currentBoardSelection = elements.boardSelect.value;
+      const currentTrainingSelection = elements.trainingBoard.value;
+      [elements.boardSelect, elements.trainingBoard].forEach(select => {
+        select.innerHTML = '';
+        names.forEach(name => {
+          const option = document.createElement('option');
+          option.value = name;
+          option.textContent = `${name} (${data.boards[name].cards.length})`;
+          select.append(option);
+        });
+      });
+      if (currentBoardSelection && names.includes(currentBoardSelection)) {
+        elements.boardSelect.value = currentBoardSelection;
+      }
+      if (currentTrainingSelection && names.includes(currentTrainingSelection)) {
+        elements.trainingBoard.value = currentTrainingSelection;
+      }
+      if (!elements.boardSelect.value && names.length) {
+        elements.boardSelect.value = names[0];
+      }
+      if (!elements.trainingBoard.value && names.length) {
+        elements.trainingBoard.value = names[0];
+      }
+    }
+
+    function refreshPreview(selected) {
+      const name = selected || elements.boardSelect.value;
+      const container = elements.boardPreview;
+      container.innerHTML = '';
+      if (!name || !data.boards[name]) return;
+      const cards = data.boards[name].cards;
+      if (!cards.length) {
+        container.innerHTML = '<em>Карточек пока нет.</em>';
+        return;
+      }
+      cards.forEach(card => {
+        const div = document.createElement('div');
+        div.className = 'board-item';
+        div.innerHTML = `<div><strong>${card.front}</strong><span>${card.back}</span></div>`;
+        container.append(div);
+      });
+    }
+
+    function refreshStats() {
+      const statsContainer = elements.stats;
+      statsContainer.innerHTML = '';
+      Object.entries(data.boards).forEach(([name, board]) => {
+        const { trained = 0, correct = 0, wrong = 0 } = board.stats || {};
+        const div = document.createElement('div');
+        const accuracy = trained ? Math.round((correct / trained) * 100) : 0;
+        div.innerHTML = `<span>${name}</span><span>Сессий: ${trained} · ✅ ${correct} · ❌ ${wrong} · 🎯 ${accuracy}%</span>`;
+        statsContainer.append(div);
+      });
+    }
+
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    function startTraining(boardName, duration) {
+      const board = data.boards[boardName];
+      if (!board || !board.cards.length) {
+        setStatus('Добавьте карточки в выбранную доску.', 'fail');
+        return;
+      }
+      trainingState.queue = shuffle([...board.cards]);
+      trainingState.wrong = [];
+      trainingState.duration = duration;
+      trainingState.activeBoard = boardName;
+      trainingState.monsterIndex = Math.floor(Math.random() * MONSTERS.length);
+      enableAnswer(true);
+      data.boards[boardName].stats.trained = (data.boards[boardName].stats.trained || 0) + 1;
+      saveData();
+      nextCard();
+    }
+
+    function enableAnswer(enable) {
+      elements.answerInput.disabled = !enable;
+      elements.submitAnswer.disabled = !enable;
+      if (enable) {
+        elements.answerInput.focus();
+      } else {
+        elements.answerInput.value = '';
+      }
+    }
+
+    function nextCard() {
+      clearTimers();
+      const queue = trainingState.queue;
+      if (!queue.length) {
+        if (trainingState.wrong.length) {
+          trainingState.queue = [...trainingState.wrong];
+          trainingState.wrong = [];
+          setStatus('Повторяем невыученные слова!', '');
+          nextCard();
+          return;
+        }
+        setStatus('🔥 Все слова пройдены! Отличная работа.', 'success');
+        enableAnswer(false);
+        elements.cardWord.textContent = 'Выберите доску и запустите новую тренировку.';
+        elements.queueCounter.textContent = '';
+        setMonsterProgress(0);
+        return;
+      }
+      trainingState.current = queue.shift();
+      elements.cardWord.textContent = trainingState.current.front;
+      elements.queueCounter.textContent = `Осталось: ${queue.length + 1 + trainingState.wrong.length}`;
+      elements.answerInput.value = '';
+      setStatus('Монстр наступает! Введите перевод.', '');
+      launchMonster();
+    }
+
+    function launchMonster() {
+      trainingState.timeRemaining = trainingState.duration;
+      const monsterIcon = MONSTERS[trainingState.monsterIndex];
+      elements.monster.textContent = monsterIcon;
+      setMonsterProgress(0);
+      trainingState.timerId = setInterval(() => {
+        trainingState.timeRemaining -= 1;
+        const progress = 1 - trainingState.timeRemaining / trainingState.duration;
+        setMonsterProgress(progress);
+        if (trainingState.timeRemaining <= 0) {
+          monsterReached();
+        }
+      }, 1000);
+    }
+
+    function setMonsterProgress(value) {
+      const clamped = Math.min(Math.max(value, 0), 1);
+      elements.monsterProgress.style.transform = `scaleX(${clamped})`;
+      elements.monster.style.transform = `translateX(${clamped * 100}%)`;
+    }
+
+    function clearTimers() {
+      if (trainingState.timerId) {
+        clearInterval(trainingState.timerId);
+        trainingState.timerId = null;
+      }
+    }
+
+    function monsterReached() {
+      clearTimers();
+      setStatus('ohhh... монстр добрался до финиша!', 'fail');
+      recordAnswer(false, true);
+      addToUnlearned(trainingState.current);
+      nextCard();
+    }
+
+    function setStatus(message, type) {
+      elements.status.textContent = message;
+      elements.status.className = `status ${type}`.trim();
+    }
+
+    function recordAnswer(correct, dueToTime = false) {
+      const boardStats = data.boards[trainingState.activeBoard].stats;
+      if (correct) {
+        boardStats.correct = (boardStats.correct || 0) + 1;
+      } else {
+        boardStats.wrong = (boardStats.wrong || 0) + 1;
+      }
+      saveData();
+      refreshStats();
+      if (!correct || dueToTime) {
+        trainingState.wrong.push(trainingState.current);
+      }
+    }
+
+    function addToUnlearned(card) {
+      const board = data.boards[UNLEARNED_KEY];
+      if (!board.cards.some(({ front, back }) => front === card.front && back === card.back)) {
+        board.cards.push({ ...card });
+        saveData();
+        refreshBoardLists();
+      }
+    }
+
+    function markLearned(card) {
+      const board = data.boards[UNLEARNED_KEY];
+      const index = board.cards.findIndex(({ front, back }) => front === card.front && back === card.back);
+      if (index >= 0) {
+        board.cards.splice(index, 1);
+        saveData();
+        refreshBoardLists();
+        if (elements.boardSelect.value === UNLEARNED_KEY) {
+          refreshPreview(UNLEARNED_KEY);
+        }
+      }
+    }
+
+    function submitAnswer() {
+      if (!trainingState.current) return;
+      const userAnswer = elements.answerInput.value.trim();
+      if (!userAnswer) return setStatus('Введите ответ, пока монстр не дошёл!', '');
+      if (compareAnswers(userAnswer, trainingState.current.back)) {
+        clearTimers();
+        setStatus('Бум! Монстр взорван!', 'success');
+        recordAnswer(true);
+        markLearned(trainingState.current);
+        trainingState.monsterIndex = (trainingState.monsterIndex + 1) % MONSTERS.length;
+        nextCard();
+      } else {
+        setStatus('Not exactly, try again!', 'fail');
+      }
+    }
+
+    function compareAnswers(input, answer) {
+      return normalize(input) === normalize(answer);
+    }
+
+    function normalize(value) {
+      return value
+        .toLowerCase()
+        .replace(/[.,!?;:]/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function removeBoard(name) {
+      if (name === UNLEARNED_KEY) {
+        setStatus('Доску «Повторение» удалить нельзя.', 'fail');
+        return;
+      }
+      if (data.boards[name]) {
+        delete data.boards[name];
+        saveData();
+        refreshBoardLists();
+        refreshPreview();
+        refreshStats();
+        setStatus(`Доска «${name}» удалена.`, '');
+      }
+    }
+
+    function exportUnlearnedBoard() {
+      const newName = prompt('Название новой доски для повторения:', 'Повторение +' + new Date().toLocaleDateString());
+      if (!newName) return;
+      if (data.boards[newName]) {
+        setStatus('Такая доска уже существует.', 'fail');
+        return;
+      }
+      data.boards[newName] = { cards: [...data.boards[UNLEARNED_KEY].cards], stats: { trained: 0, correct: 0, wrong: 0 } };
+      saveData();
+      refreshBoardLists();
+      elements.boardSelect.value = newName;
+      elements.trainingBoard.value = newName;
+      refreshPreview(newName);
+      refreshStats();
+      setStatus(`Создана доска «${newName}» из невыученных слов.`, 'success');
+    }
+
+    elements.boardForm.addEventListener('submit', event => {
+      event.preventDefault();
+      const boardName = elements.boardName.value.trim();
+      const front = elements.wordFront.value.trim();
+      const back = elements.wordBack.value.trim();
+      if (!boardName || !front || !back) return;
+      addCard(boardName, front, back);
+      elements.boardName.value = '';
+      elements.wordFront.value = '';
+      elements.wordBack.value = '';
+      setStatus(`Карточка «${front}» добавлена в «${boardName}».`, 'success');
+    });
+
+    elements.boardSelect.addEventListener('change', event => {
+      refreshPreview(event.target.value);
+    });
+
+    elements.shuffleBoard.addEventListener('click', () => {
+      const boardName = elements.boardSelect.value;
+      if (!boardName) return;
+      data.boards[boardName].cards = shuffle([...data.boards[boardName].cards]);
+      saveData();
+      refreshPreview(boardName);
+      setStatus(`Карточки в «${boardName}» перемешаны.`, '');
+    });
+
+    elements.clearBoard.addEventListener('click', () => {
+      const boardName = elements.boardSelect.value;
+      if (!boardName) return;
+      if (confirm(`Удалить доску «${boardName}» полностью?`)) {
+        removeBoard(boardName);
+      }
+    });
+
+    elements.exportUnlearned.addEventListener('click', exportUnlearnedBoard);
+
+    elements.startTraining.addEventListener('click', () => {
+      const boardName = elements.trainingBoard.value;
+      const duration = parseInt(elements.timeLimit.value, 10);
+      startTraining(boardName, duration);
+    });
+
+    elements.submitAnswer.addEventListener('click', submitAnswer);
+    elements.answerInput.addEventListener('keydown', event => {
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        submitAnswer();
+      }
+    });
+
+    elements.trainUnlearned.addEventListener('click', () => {
+      if (!data.boards[UNLEARNED_KEY].cards.length) {
+        setStatus('В доске «Повторение» пока пусто — отлично!', '');
+        return;
+      }
+      elements.trainingBoard.value = UNLEARNED_KEY;
+      startTraining(UNLEARNED_KEY, parseInt(elements.timeLimit.value, 10));
+    });
+
+  </script>
+</body>
+</html>
